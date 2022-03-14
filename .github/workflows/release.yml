@@ -65,5 +65,6 @@ jobs:
           destination_folder: "analytics-raw-data"
           user_email: ${{ secrets.USER_EMAIL }}
           user_name: ${{ secrets.USER_NAME }}
+          user_password: ${{ secrets.USER_PASSWORD }}
           commit_message: 'Adding test file - fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}-test.json'
           
