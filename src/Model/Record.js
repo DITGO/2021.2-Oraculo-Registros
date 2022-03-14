@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes } = require('sequelize')
 
 class Record extends Model {
   static init(sequelize) {
@@ -19,27 +19,28 @@ class Record extends Model {
         situation: { type: DataTypes.TEXT },
         created_by: { type: DataTypes.TEXT },
         assigned_to: { type: DataTypes.TEXT },
+        link: { type: DataTypes.TEXT },
       },
       {
         sequelize,
-        tableName: "records",
+        tableName: 'records',
       }
-    );
+    )
   }
 
   static associate(models) {
-    this.hasMany(models.History, { foreignKey: "record_id", as: "histories" });
+    this.hasMany(models.History, { foreignKey: 'record_id', as: 'histories' })
     this.belongsToMany(models.Tag, {
-      foreignKey: "record_id",
-      through: "records_tags",
-      as: "tags",
-    });
+      foreignKey: 'record_id',
+      through: 'records_tags',
+      as: 'tags',
+    })
     this.belongsToMany(models.Department, {
-      foreignKey: "record_id",
-      through: "record_departments",
-      as: "departments",
-    });
+      foreignKey: 'record_id',
+      through: 'record_departments',
+      as: 'departments',
+    })
   }
 }
 
-module.exports = Record;
+module.exports = Record
