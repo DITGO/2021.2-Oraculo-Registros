@@ -82,9 +82,9 @@ async function createRecord(req, res) {
     contact_info,
     created_by,
     tags,
+    have_physical_object,
     link,
   } = req.body)
-  console.log(record.link)
   if (record.link) {
     if (!record.link.match(/https:\/\/\w+/g)) {
       return res

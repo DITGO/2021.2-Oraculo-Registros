@@ -19,6 +19,7 @@ class Record extends Model {
         situation: { type: DataTypes.TEXT },
         created_by: { type: DataTypes.TEXT },
         assigned_to: { type: DataTypes.TEXT },
+        have_physical_object: { type: DataTypes.BOOLEAN },
         link: { type: DataTypes.TEXT },
       },
       {
