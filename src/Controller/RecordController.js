@@ -83,7 +83,16 @@ async function createRecord(req, res) {
     created_by,
     tags,
     have_physical_object,
+    link,
   } = req.body)
+  if (record.link) {
+    if (!record.link.match(/https:\/\/\w+/g)) {
+      return res
+        .status(400)
+        .json({ error: 'Certifique-se de que o link leva para uma URL válida' })
+    }
+  }
+
   try {
     // find email of user who created record
     const createdBy = String(record.created_by)
