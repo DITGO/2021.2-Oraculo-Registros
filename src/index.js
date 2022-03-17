@@ -7,13 +7,13 @@ const { initializeDatabase } = require("./Database");
 
 const app = express();
 env.config();
-const { PORT, APP_PORT, CORS } = process.env;
+const { PORT, APP_PORT } = process.env;
 
 let corsOptions = {
-  origin: (CORS === "") ? "http://localhost:3000" : `${CORS}`,
+  origin: "https://oraculo-frontend.herokuapp.com",
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(morgan("short"));
 app.use(express.json());
 app.use(routes);
