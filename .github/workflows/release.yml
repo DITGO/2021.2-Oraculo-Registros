@@ -15,10 +15,11 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Get Date
-        id: date
-        run: echo "::set-output name=date::$(date +'%m-%d-%Y-%H-%M')-${{github.ref_name}}"
-        
+      - name: Get name
+        id: name
+        run: echo "::set-output name=file_name::fga-eps-mds-2021-2-Oraculo-Registros-$(TZ='America/Sao_Paulo' date +'%m-%d-%Y-%H-%M-%S')-${{github.ref_name}}"
+
+      
       - name: Run tests
         uses: actions/setup-node@v1
         with:
@@ -28,10 +29,10 @@ jobs:
       - run: yarn
       - run: yarn run db:migrate
       - run: yarn run db:seeders
-      - run: yarn test --coverage --outputFile=fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}-test.json --json
+      
 
       - name: Create JSON
-        run: curl -X POST 'https://sonarcloud.io/api/measures/component_tree?component=fga-eps-mds_2021.2-Oraculo-Registros&branch=devel&metricKeys=files,functions,complexity,comment_lines_density,duplicated_lines_density,coverage,ncloc,security_rating,tests,test_success_density,test_execution_time,reliability_rating&ps=500' > fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}.json
+        run: curl -X POST 'https://sonarcloud.io/api/measures/component_tree?component=fga-eps-mds_2021.2-Oraculo-Registros&branch=devel&metricKeys=files,functions,complexity,comment_lines_density,duplicated_lines_density,coverage,ncloc,security_rating,tests,test_success_density,test_execution_time,reliability_rating&ps=500' > ${{ steps.name.outputs.file_name }}.json
         
       - name: Make release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -39,14 +40,14 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}.json
+            ${{ steps.name.outputs.file_name }}.json
 
       - name: Pushes sonar file
         uses: dmnemec/copy_file_to_another_repo_action@80732d64341473fa7165a3b2b6c7b0ee164193f8
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}.json
+          source_file: ${{ steps.name.outputs.file_name }}.json
           destination_repo: "fga-eps-mds/2021-2-Oraculo-Doc"
           destination_branch: "master"
           destination_folder: "analytics-raw-data"
@@ -54,17 +55,4 @@ jobs:
           user_name: ${{ secrets.USER_NAME }}
           commit_message: 'Adding SonarCloud file - fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}.json'
 
-      - name: Pushes test file
-        uses: dmnemec/copy_file_to_another_repo_action@80732d64341473fa7165a3b2b6c7b0ee164193f8
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        with:
-          source_file: fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}-test.json
-          destination_repo: "fga-eps-mds/2021-2-Oraculo-Doc"
-          destination_branch: "master"
-          destination_folder: "analytics-raw-data"
-          user_email: ${{ secrets.USER_EMAIL }}
-          user_name: ${{ secrets.USER_NAME }}
-          user_password: ${{ secrets.USER_PASSWORD }}
-          commit_message: 'Adding test file - fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}-test.json'
-          
+    
