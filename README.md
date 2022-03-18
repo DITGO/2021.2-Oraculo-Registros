@@ -1,19 +1,18 @@
-# 2021.1-Oraculo-Registros
+# 2021.2-Oraculo-Registros
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/gpl-3.0.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/gpl-3.0.html) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=coverage)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2021.1-Oraculo-Processos&metric=alert_status)](https://sonarcloud.io/dashboard?id=fga-eps-mds_2021.1-Oraculo-Registros)
+Essa API faz parte da arquitetura de microsserviços do projeto [`Oráculo`](https://github.com/fga-eps-mds/2021-2-Oraculo-Doc), e foi criada com a finalidade de gerenciar os usuários
 
-Essa API faz parte da arquitetura de microsserviços do projeto [`Oráculo`](https://github.com/fga-eps-mds/2021.1-Oraculo), e foi criada com a finalidade de gerenciar os usuários
 
 ## Como contribuir?
 
-Gostaria de contribuir com nosso projeto? Acesse o nosso [guia de contribuição](https://fga-eps-mds.github.io/2021.1-Oraculo/CONTRIBUTING/) onde são explicados todos os passos.
+Gostaria de contribuir com nosso projeto? Acesse o nosso [guia de contribuição](https://fga-eps-mds.github.io/2021.2-Oraculo/CONTRIBUTING/) onde são explicados todos os passos.
 Caso reste duvidas você também pode entrar em contato conosco criando uma issue.
 
 ## Documentação
 
-A documentação do projeto pode ser acessada pelo nosso site em https://fga-eps-mds.github.io/2021.1-Oraculo/.
+A documentação do projeto pode ser acessada pelo nosso site em https://github.com/fga-eps-mds/2021-2-Oraculo-Doc
 
 ## Testes
 
@@ -205,7 +204,10 @@ Para criar um registro, envie os dados nesse formato:
   "sei_number": "",
   "receipt_form": "",
   "contact_info": "",
-  "created_by": ""
+  "created_by": "",
+  "link": "",
+  "have_physical_object": ""
+
 }
 ```
 
