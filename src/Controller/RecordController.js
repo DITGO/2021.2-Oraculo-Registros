@@ -84,6 +84,7 @@ async function createRecord(req, res) {
     tags,
     have_physical_object,
     link,
+    key_words,
   } = req.body)
   if (record.link) {
     if (!record.link.match(/https:\/\/\w+/g)) {
