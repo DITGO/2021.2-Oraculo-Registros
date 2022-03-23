@@ -462,7 +462,7 @@ async function addTagToRecord(req, res) {
 async function editRecord(req, res) {
   const { id } = req.params
   const recordID = Number.parseInt(id)
-
+  console.log(req.body.link)
   const newInfo = ({
     inclusion_date,
     city,
@@ -476,6 +476,7 @@ async function editRecord(req, res) {
     receipt_form,
     contact_info,
     tags,
+    link,
   } = req.body)
 
   try {
@@ -495,7 +496,7 @@ async function editRecord(req, res) {
     record.sei_number = newInfo.sei_number
     record.receipt_form = newInfo.receipt_form
     record.contact_info = newInfo.contact_info
-
+    record.link = newInfo.link
     await record.save()
 
     const editedRecord = await Record.findByPk(recordID)
