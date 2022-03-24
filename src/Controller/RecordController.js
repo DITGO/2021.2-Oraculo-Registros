@@ -479,6 +479,7 @@ async function editRecord(req, res) {
     tags,
     link,
     have_physical_object,
+    key_words
   } = req.body)
 
   try {
@@ -500,6 +501,7 @@ async function editRecord(req, res) {
     record.contact_info = newInfo.contact_info
     record.link = newInfo.link
     record.have_physical_object = newInfo.have_physical_object
+    record.key_words = newInfo.key_words
     await record.save()
 
     const editedRecord = await Record.findByPk(recordID)
