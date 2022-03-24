@@ -21,7 +21,6 @@ async function createDepartment(req, res) {
     const newDepartment = await Department.create({ name, is_admin: true })
     return res.status(200).send(newDepartment)
   } catch (error) {
-    console.log(`could not create department: ${error}`)
     return res
       .status(500)
       .json({ error: 'internal error during department creation' })

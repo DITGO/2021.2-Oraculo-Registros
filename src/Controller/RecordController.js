@@ -463,7 +463,7 @@ async function addTagToRecord(req, res) {
 async function editRecord(req, res) {
   const { id } = req.params
   const recordID = Number.parseInt(id)
-  console.log(req.body.link)
+
   const newInfo = ({
     inclusion_date,
     city,
