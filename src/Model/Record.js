@@ -21,6 +21,7 @@ class Record extends Model {
         assigned_to: { type: DataTypes.TEXT },
         have_physical_object: { type: DataTypes.BOOLEAN },
         link: { type: DataTypes.TEXT },
+        key_words: { type: DataTypes.TEXT },
       },
       {
         sequelize,
