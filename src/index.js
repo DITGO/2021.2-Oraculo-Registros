@@ -21,9 +21,10 @@ app.disable("x-powered-by");
 
 if (PORT === undefined) {
   app.listen(APP_PORT);
-
+  console.log(`HTTP server started on port ${APP_PORT}`);
+} else {
   app.listen(PORT);
-
+  console.log(`HTTP server started on port ${PORT}`);
 }
 
 initializeDatabase().then(() => {
