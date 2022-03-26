@@ -32,8 +32,8 @@ jobs:
       
 
       - name: Create JSON
-        run: curl -X POST 'https://sonarcloud.io/api/measures/component_tree?component=fga-eps-mds_2021.2-Oraculo-Registros&branch=main&metricKeys=files,functions,complexity,comment_lines_density,duplicated_lines_density,coverage,ncloc,tests,test_errors,test_failures,test_execution_time,security_rating,test_success_density,reliability_rating&ps=500' > fga-eps-mds-2021_2-Oraculo-Registros-${{ steps.date.outputs.date }}.json     
-           
+        run: curl -X POST 'https://sonarcloud.io/api/measures/component_tree?component=fga-eps-mds_2021.2-Oraculo-Registros&branch=main&metricKeys=files,functions,complexity,comment_lines_density,duplicated_lines_density,coverage,ncloc,security_rating,tests,test_success_density,test_execution_time,reliability_rating&ps=500' > ${{ steps.name.outputs.file_name }}.json
+        
       - name: Make release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -41,7 +41,6 @@ jobs:
           prerelease: false
           files: |
             ${{ steps.name.outputs.file_name }}.json
-
       - name: Pushes sonar file
         uses: dmnemec/copy_file_to_another_repo_action@80732d64341473fa7165a3b2b6c7b0ee164193f8
         env:
