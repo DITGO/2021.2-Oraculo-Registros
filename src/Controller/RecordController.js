@@ -15,6 +15,7 @@ const {
 } = require('./RecordNumberController')
 const { Op } = require('sequelize')
 const { Department } = require('../Model/Department')
+const Receivement = require('../Model/Receivement')
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params
@@ -46,7 +47,8 @@ async function getRecordByID(request, response) {
     return response.status(400).json({ error: 'invalid record id' })
   }
 
-  const record = await Record.findByPk(recordID)
+  const record = await Record.findByPk(recordID, { include: 'receivements' })
+  console.log(record)
   if (!record) {
     return response
       .status(404)
@@ -275,12 +277,15 @@ async function forwardRecord(req, res) {
     destination_name: destinationDepartment.name,
     record_id: recordID,
   }
-
+  await Receivement.create({
+    record_id: recordID,
+    department_id: destinationID,
+    received: false,
+  })
   // updates history
   // forward record to department
   await record.addDepartment(destinationDepartment)
   await History.create(history)
-
   return res.status(200).json({
     forwarded_by: `${user.email}`,
     forwarded_by_name: `${user.name}`,
@@ -479,7 +484,7 @@ async function editRecord(req, res) {
     tags,
     link,
     have_physical_object,
-    key_words
+    key_words,
   } = req.body)
 
   try {
