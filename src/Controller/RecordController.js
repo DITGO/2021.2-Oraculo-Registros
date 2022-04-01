@@ -48,7 +48,6 @@ async function getRecordByID(request, response) {
   }
 
   const record = await Record.findByPk(recordID, { include: 'receivements' })
-  console.log(record)
   if (!record) {
     return response
       .status(404)
