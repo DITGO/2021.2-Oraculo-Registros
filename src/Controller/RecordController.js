@@ -626,6 +626,43 @@ async function findRecordWithSeiNumber(req, res) {
   return res.status(200).json({ found: true })
 }
 
+async function confirmReceivement(req, res) {
+  const { received_by, received_id, record_id, department_id } = req.body
+  const receivedBy = String(received_by)
+  const receivedId = Number(received_id)
+  const recordId = Number(record_id)
+  const departmentId = Number(department_id)
+
+  const record = await Record.findByPk(recordId)
+  if (!record) {
+    return res.status(400).json({ error: 'There is no record for this id' })
+  }
+
+  const user = await User.findOne({ where: { email: receivedBy } })
+  if (!user) {
+    return res.status(400).json({ error: 'There is no user for this id' })
+  }
+
+  const received = await Receivement.findByPk(receivedId)
+  if (!received) {
+    return res
+      .status(400)
+      .json({ error: 'There is no received instance for this id' })
+  }
+  const department = await Department.findByPk(departmentId)
+  if (!department) {
+    return res.status(400).json({ error: 'There is no department for this id' })
+  }
+  received.received = true
+  await received.save()
+  const history = await History.create({
+    origin_name: department.name,
+    received_by: receivedBy,
+    record_id: recordID,
+  })
+  return res.status(200).json(history)
+}
+
 module.exports = {
   getRecordByID,
   getAllRecords,
@@ -645,4 +682,5 @@ module.exports = {
   closeRecord,
   reopenRecord,
   findRecordWithSeiNumber,
+  confirmReceivement,
 }
