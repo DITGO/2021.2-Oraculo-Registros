@@ -19,6 +19,7 @@ class History extends Model {
         reopened_at: { type: DataTypes.DATE },
         reopened_by: { type: DataTypes.TEXT },
         reason: { type: DataTypes.TEXT },
+        received_by: { type: DataTypes.TEXT },
       },
       {
         sequelize,
