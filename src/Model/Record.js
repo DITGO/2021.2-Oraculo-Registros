@@ -32,6 +32,10 @@ class Record extends Model {
 
   static associate(models) {
     this.hasMany(models.History, { foreignKey: 'record_id', as: 'histories' })
+    this.hasMany(models.Receivement, {
+      foreignKey: 'record_id',
+      as: 'receivements',
+    })
     this.belongsToMany(models.Tag, {
       foreignKey: 'record_id',
       through: 'records_tags',

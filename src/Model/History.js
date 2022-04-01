@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes } = require('sequelize')
 
 class History extends Model {
   static init(sequelize) {
@@ -22,14 +22,14 @@ class History extends Model {
       },
       {
         sequelize,
-        tableName: "history",
+        tableName: 'history',
       }
-    );
+    )
   }
 
   static associate(models) {
-    this.belongsTo(models.Record, { foreignKey: "record_id", as: "record" });
+    this.belongsTo(models.Record, { foreignKey: 'record_id', as: 'record' })
   }
 }
 
-module.exports = History;
+module.exports = History
