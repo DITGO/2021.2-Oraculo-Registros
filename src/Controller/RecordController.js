@@ -658,7 +658,7 @@ async function confirmReceivement(req, res) {
   const history = await History.create({
     origin_name: department.name,
     received_by: receivedBy,
-    record_id: recordID,
+    record_id: recordId,
   })
   return res.status(200).json(history)
 }
