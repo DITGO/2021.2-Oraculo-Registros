@@ -15,6 +15,7 @@ const {
 } = require('./RecordNumberController')
 const { Op } = require('sequelize')
 const { Department } = require('../Model/Department')
+const Receivement = require('../Model/Receivement')
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params
@@ -46,7 +47,7 @@ async function getRecordByID(request, response) {
     return response.status(400).json({ error: 'invalid record id' })
   }
 
-  const record = await Record.findByPk(recordID)
+  const record = await Record.findByPk(recordID, { include: 'receivements' })
   if (!record) {
     return response
       .status(404)
@@ -275,12 +276,15 @@ async function forwardRecord(req, res) {
     destination_name: destinationDepartment.name,
     record_id: recordID,
   }
-
+  await Receivement.create({
+    record_id: recordID,
+    department_id: destinationID,
+    received: false,
+  })
   // updates history
   // forward record to department
   await record.addDepartment(destinationDepartment)
   await History.create(history)
-
   return res.status(200).json({
     forwarded_by: `${user.email}`,
     forwarded_by_name: `${user.name}`,
@@ -479,7 +483,7 @@ async function editRecord(req, res) {
     tags,
     link,
     have_physical_object,
-    key_words
+    key_words,
   } = req.body)
 
   try {
@@ -622,6 +626,43 @@ async function findRecordWithSeiNumber(req, res) {
   return res.status(200).json({ found: true })
 }
 
+async function confirmReceivement(req, res) {
+  const { received_by, received_id, record_id, department_id } = req.body
+  const receivedBy = String(received_by)
+  const receivedId = Number(received_id)
+  const recordId = Number(record_id)
+  const departmentId = Number(department_id)
+
+  const record = await Record.findByPk(recordId)
+  if (!record) {
+    return res.status(400).json({ error: 'There is no record for this id' })
+  }
+
+  const user = await User.findOne({ where: { email: receivedBy } })
+  if (!user) {
+    return res.status(400).json({ error: 'There is no user for this id' })
+  }
+
+  const received = await Receivement.findByPk(receivedId)
+  if (!received) {
+    return res
+      .status(400)
+      .json({ error: 'There is no received instance for this id' })
+  }
+  const department = await Department.findByPk(departmentId)
+  if (!department) {
+    return res.status(400).json({ error: 'There is no department for this id' })
+  }
+  received.received = true
+  await received.save()
+  const history = await History.create({
+    origin_name: department.name,
+    received_by: receivedBy,
+    record_id: recordId,
+  })
+  return res.status(200).json(history)
+}
+
 module.exports = {
   getRecordByID,
   getAllRecords,
@@ -641,4 +682,5 @@ module.exports = {
   closeRecord,
   reopenRecord,
   findRecordWithSeiNumber,
+  confirmReceivement,
 }

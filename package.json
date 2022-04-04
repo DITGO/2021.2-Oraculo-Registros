@@ -6,6 +6,7 @@
   "scripts": {
     "test": "export DATABASE_URL=postgres://oraculo:oraculo123@localhost:5431/oraculo && jest --coverage --forceExit",
     "db:migrate": "export DATABASE_URL=postgres://oraculo:oraculo123@localhost:5431/oraculo && sleep 5 && npx sequelize db:migrate",
+    "db:migrate:undo": "export DATABASE_URL=postgres://oraculo:oraculo123@localhost:5431/oraculo && sleep 5 && npx sequelize db:migrate:undo",
     "db:migrate:prod": "npx sequelize db:migrate --env production",
     "db:seeders": "export DATABASE_URL=postgres://oraculo:oraculo123@localhost:5431/oraculo && npx sequelize db:seed:all",
     "db:seeders:prod": "npx sequelize db:seed:all --env production",

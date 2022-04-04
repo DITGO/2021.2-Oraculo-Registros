@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes } = require('sequelize')
 
 class Department extends Model {
   static init(sequelize) {
@@ -9,18 +9,22 @@ class Department extends Model {
       },
       {
         sequelize,
-        tableName: "departments",
+        tableName: 'departments',
       }
-    );
+    )
   }
 
   static associate(models) {
     this.belongsToMany(models.Record, {
-      foreignKey: "department_id",
-      through: "record_departments",
-      as: "records",
-    });
+      foreignKey: 'department_id',
+      through: 'record_departments',
+      as: 'records',
+    })
+    this.hasMany(models.Receivement, {
+      foreignKey: 'department_id',
+      as: 'departments',
+    })
   }
 }
 
-module.exports = { Department };
+module.exports = { Department }
