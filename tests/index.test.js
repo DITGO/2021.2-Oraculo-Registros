@@ -609,8 +609,127 @@ describe('Main test', () => {
     const res = await request(app).post('/departments').send({})
     expect(res.statusCode).toEqual(400)
   })
+
+  it('POST /confirm-receivement - should create a history and change value on receivements table', async () => {
+    const res1 = await request(app).post('/records').send(validRecord1)
+    expect(res1.statusCode).toEqual(200)
+
+    const payload = {
+      destination_id: 2,
+      origin_id: 2,
+      forwarded_by: 'william@pcgo.com',
+    }
+    await request(app).post('/records/1/forward').send(payload)
+
+    const requestReceivement = {
+      received_by: 'william@pcgo.com',
+      received_id: 1,
+      record_id: 1,
+      department_id: 2,
+    }
+    const response = await request(app)
+      .post('/confirm-receivement')
+      .send(requestReceivement)
+
+    expect(response.statusCode).toEqual(200)
+  })
 })
 
+it('POST /confirm-receivement - should return 400 if record does not exist', async () => {
+  const res1 = await request(app).post('/records').send(validRecord1)
+  expect(res1.statusCode).toEqual(200)
+
+  const payload = {
+    destination_id: 2,
+    origin_id: 2,
+    forwarded_by: 'william@pcgo.com',
+  }
+  await request(app).post('/records/1/forward').send(payload)
+
+  const requestReceivement = {
+    received_by: 'william@pcgo.com',
+    received_id: 1,
+    record_id: 10,
+    department_id: 2,
+  }
+  const response = await request(app)
+    .post('/confirm-receivement')
+    .send(requestReceivement)
+
+  expect(response.statusCode).toEqual(400)
+})
+
+it('POST /confirm-receivement - should return 400 if department does not exist', async () => {
+  const res1 = await request(app).post('/records').send(validRecord1)
+  expect(res1.statusCode).toEqual(200)
+
+  const payload = {
+    destination_id: 2,
+    origin_id: 2,
+    forwarded_by: 'william@pcgo.com',
+  }
+  await request(app).post('/records/1/forward').send(payload)
+
+  const requestReceivement = {
+    received_by: 'william@pcgo.com',
+    received_id: 2,
+    record_id: 1,
+    department_id: 500,
+  }
+  const response = await request(app)
+    .post('/confirm-receivement')
+    .send(requestReceivement)
+
+  expect(response.statusCode).toEqual(400)
+})
+
+it('POST /confirm-receivement - should return 400 if receivement does not exist', async () => {
+  const res1 = await request(app).post('/records').send(validRecord1)
+  expect(res1.statusCode).toEqual(200)
+
+  const payload = {
+    destination_id: 2,
+    origin_id: 2,
+    forwarded_by: 'william@pcgo.com',
+  }
+  await request(app).post('/records/1/forward').send(payload)
+
+  const requestReceivement = {
+    received_by: 'william@pcgo.com',
+    received_id: 2000,
+    record_id: 1,
+    department_id: 2,
+  }
+  const response = await request(app)
+    .post('/confirm-receivement')
+    .send(requestReceivement)
+
+  expect(response.statusCode).toEqual(400)
+})
+
+it('POST /confirm-receivement - should return 400 if user does not exist', async () => {
+  const res1 = await request(app).post('/records').send(validRecord1)
+  expect(res1.statusCode).toEqual(200)
+
+  const payload = {
+    destination_id: 2,
+    origin_id: 2,
+    forwarded_by: 'william@pcgo.com',
+  }
+  await request(app).post('/records/1/forward').send(payload)
+
+  const requestReceivement = {
+    received_by: 'invalid_user_email@email.com',
+    received_id: 1,
+    record_id: 1,
+    department_id: 2,
+  }
+  const response = await request(app)
+    .post('/confirm-receivement')
+    .send(requestReceivement)
+
+  expect(response.statusCode).toEqual(400)
+})
 afterAll((done) => {
   done()
 })
