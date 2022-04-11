@@ -237,12 +237,11 @@ async function getRecordsByPage(req, res) {
 
 async function forwardRecord(req, res) {
   const { id } = req.params
-  const { destination_id, origin_id, forwarded_by } = req.body
+  const { destination_id, origin_id, forwarded_by, reason } = req.body
   const recordID = Number.parseInt(id)
   const originID = Number.parseInt(origin_id)
   const destinationID = Number.parseInt(destination_id)
   const forwardedBy = String(forwarded_by)
-
   if (!Number.isFinite(originID) || !Number.isFinite(destinationID)) {
     return res.status(400).json({ error: 'invalid Department id provided' })
   }
@@ -275,6 +274,7 @@ async function forwardRecord(req, res) {
     destination_id: destinationID,
     destination_name: destinationDepartment.name,
     record_id: recordID,
+    reason: reason,
   }
   await Receivement.create({
     record_id: recordID,
