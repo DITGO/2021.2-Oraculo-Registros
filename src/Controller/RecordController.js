@@ -16,6 +16,7 @@ const {
 const { Op } = require('sequelize')
 const { Department } = require('../Model/Department')
 const Receivement = require('../Model/Receivement')
+const moment = require('moment')
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params
@@ -153,7 +154,18 @@ async function createRecord(req, res) {
 async function getRecordsByPage(req, res) {
   const { page } = req.params
   const { where, department_id } = req.body
+  const { start, end } = req.query
   const itemsPerPage = 30
+
+  startDate =
+    start != 'undefined'
+      ? moment(start, 'DD/MM/YYYY').toDate()
+      : moment().startOf('day').subtract('500', 'year').toDate()
+
+  endDate =
+    end != 'undefined' ? moment(end, 'DD/MM/YYYY').toDate() : moment().toDate()
+  console.log('SASTASF', startDate)
+  console.log('SASTASF', endDate)
 
   try {
     const historyFields = [
@@ -173,11 +185,14 @@ async function getRecordsByPage(req, res) {
     const tagFilters = []
 
     Object.entries(_where).forEach(([key, value]) => {
+      console.log('KEY AQUI KRAL', key)
       filters[key] = {
         [Op.iLike]: `%${value}%`,
       }
     })
-
+    filters['inclusion_date'] = {
+      [Op.between]: [startDate, endDate],
+    }
     if (history) {
       historyFields.forEach((item) => {
         historyFilters.push({

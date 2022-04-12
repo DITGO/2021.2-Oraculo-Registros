@@ -122,7 +122,7 @@ describe('Main test', () => {
 
   it('POST /records/page/0 - should not return any records', async () => {
     const res = await request(app)
-      .post('/records/page/40')
+      .post('/records/page/40?start=undefined&end=undefined')
       .send({ department_id: 5699 })
     expect(res.statusCode).toEqual(204)
   })
@@ -167,7 +167,9 @@ describe('Main test', () => {
   })
 
   it('POST /records/page/0 - should return at least one record', async () => {
-    const res = await request(app).post('/records/page/0').send({})
+    const res = await request(app)
+      .post('/records/page/0?start=undefined&end=undefined')
+      .send({})
     expect(res.statusCode).toEqual(200)
   })
 
@@ -649,7 +651,7 @@ it('POST /confirm-receivement - should return 400 if record does not exist', asy
   const requestReceivement = {
     received_by: 'william@pcgo.com',
     received_id: 1,
-    record_id: 10,
+    record_id: 1023,
     department_id: 2,
   }
   const response = await request(app)
