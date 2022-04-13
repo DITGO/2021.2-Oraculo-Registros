@@ -13,7 +13,7 @@ const {
   formatRecordSequence,
   getNextRecordNumber,
 } = require('./RecordNumberController')
-const { Op } = require('sequelize')
+const { Op, DATE } = require('sequelize')
 const { Department } = require('../Model/Department')
 const Receivement = require('../Model/Receivement')
 const moment = require('moment')
@@ -159,14 +159,16 @@ async function getRecordsByPage(req, res) {
 
   startDate =
     start != 'undefined'
-      ? moment(start, 'DD/MM/YYYY').toDate()
-      : moment().startOf('day').subtract('500', 'year').toDate()
+      ? moment(start, 'DD/MM/YYYY').endOf('day')
+      : moment().endOf('day').subtract('500', 'year')
 
   endDate =
-    end != 'undefined' ? moment(end, 'DD/MM/YYYY').toDate() : moment().toDate()
-  console.log('SASTASF', startDate)
-  console.log('SASTASF', endDate)
+    end != 'undefined'
+      ? moment(end, 'DD/MM/YYYY').endOf('day')
+      : moment().endOf('day')
 
+  const startDateFormat = DATE(startDate)
+  const endDateFormat = DATE(endDate)
   try {
     const historyFields = [
       'origin_name',
@@ -185,13 +187,12 @@ async function getRecordsByPage(req, res) {
     const tagFilters = []
 
     Object.entries(_where).forEach(([key, value]) => {
-      console.log('KEY AQUI KRAL', key)
       filters[key] = {
         [Op.iLike]: `%${value}%`,
       }
     })
     filters['inclusion_date'] = {
-      [Op.between]: [startDate, endDate],
+      [Op.between]: [startDateFormat.options, endDateFormat.options],
     }
     if (history) {
       historyFields.forEach((item) => {
@@ -212,7 +213,6 @@ async function getRecordsByPage(req, res) {
         })
       })
     }
-
     const { rows, count } = await Record.findAndCountAll({
       include: [
         {
