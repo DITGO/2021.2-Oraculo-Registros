@@ -159,7 +159,7 @@ async function getRecordsByPage(req, res) {
 
   startDate =
     start != 'undefined'
-      ? moment(start, 'DD/MM/YYYY').endOf('day')
+      ? moment(start, 'DD/MM/YYYY').startOf('day')
       : moment().endOf('day').subtract('500', 'year')
 
   endDate =
