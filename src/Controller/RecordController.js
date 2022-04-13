@@ -16,6 +16,7 @@ const {
 const { Op } = require('sequelize')
 const { Department } = require('../Model/Department')
 const Receivement = require('../Model/Receivement')
+const moment = require('moment')
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params
@@ -153,7 +154,18 @@ async function createRecord(req, res) {
 async function getRecordsByPage(req, res) {
   const { page } = req.params
   const { where, department_id } = req.body
+  const { start, end } = req.query
   const itemsPerPage = 30
+
+  startDate =
+    start != 'undefined'
+      ? moment(start, 'DD/MM/YYYY').toDate()
+      : moment().startOf('day').subtract('500', 'year').toDate()
+
+  endDate =
+    end != 'undefined' ? moment(end, 'DD/MM/YYYY').toDate() : moment().toDate()
+  console.log('SASTASF', startDate)
+  console.log('SASTASF', endDate)
 
   try {
     const historyFields = [
@@ -173,11 +185,14 @@ async function getRecordsByPage(req, res) {
     const tagFilters = []
 
     Object.entries(_where).forEach(([key, value]) => {
+      console.log('KEY AQUI KRAL', key)
       filters[key] = {
         [Op.iLike]: `%${value}%`,
       }
     })
-
+    filters['inclusion_date'] = {
+      [Op.between]: [startDate, endDate],
+    }
     if (history) {
       historyFields.forEach((item) => {
         historyFilters.push({
@@ -237,12 +252,11 @@ async function getRecordsByPage(req, res) {
 
 async function forwardRecord(req, res) {
   const { id } = req.params
-  const { destination_id, origin_id, forwarded_by } = req.body
+  const { destination_id, origin_id, forwarded_by, reason } = req.body
   const recordID = Number.parseInt(id)
   const originID = Number.parseInt(origin_id)
   const destinationID = Number.parseInt(destination_id)
   const forwardedBy = String(forwarded_by)
-
   if (!Number.isFinite(originID) || !Number.isFinite(destinationID)) {
     return res.status(400).json({ error: 'invalid Department id provided' })
   }
@@ -275,6 +289,7 @@ async function forwardRecord(req, res) {
     destination_id: destinationID,
     destination_name: destinationDepartment.name,
     record_id: recordID,
+    reason: reason,
   }
   await Receivement.create({
     record_id: recordID,
