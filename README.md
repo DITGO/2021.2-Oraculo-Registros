@@ -1,6 +1,10 @@
 # 2021.2-Oraculo-Registros
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/gpl-3.0.html) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=coverage)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/gpl-3.0.html) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2021.2-Oraculo-Registros&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2021.2-Oraculo-Registros)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros) 
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lucaslop_2021.2-Oraculo-Registros&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=lucaslop_2021.2-Oraculo-Registros)
 
 Essa API faz parte da arquitetura de microsserviços do projeto [`Oráculo`](https://github.com/fga-eps-mds/2021-2-Oraculo-Doc), e foi criada com a finalidade de gerenciar os usuários
 
