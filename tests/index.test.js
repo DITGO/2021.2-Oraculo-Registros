@@ -734,7 +734,7 @@ it('POST /confirm-receivement - should return 400 if user does not exist', async
 })
 
 it('GET /get-user-info - should return 200 if valid email is provided', async () => {
-  const res = await request(app).get('/get-user-info?william@pcgo.com')
+  const res = await request(app).get('/get-user-info?email=william@pcgo.com')
   expect(res.statusCode).toEqual(200)
 })
 
