@@ -685,6 +685,44 @@ async function confirmReceivement(req, res) {
   return res.status(200).json(history);
 }
 
+async function getUserInfo(req, res) {
+  const { email } = req.query
+  const userEmail = String(email)
+
+  const user =
+    userEmail != 'admin@email.com'
+      ? await User.findOne({ where: { email: userEmail } })
+      : 'adminUser'
+
+  if (!user) {
+    return res.status(404).json({ error: 'There is no user for this id' })
+  }
+  const userDepartment =
+    userEmail != 'admin@email.com'
+      ? await Department.findByPk(user.department_id)
+      : { name: 'Administração' }
+
+  const userForwards =
+    userEmail != 'admin@email.com'
+      ? await History.count({
+          where: { created_by: user.email },
+        })
+      : 0
+
+  const userReceivements =
+    userEmail != 'admin@email.com'
+      ? await History.count({
+          where: { received_by: user.email },
+        })
+      : 0
+  return res.status(200).json({
+    user,
+    userDepartment,
+    userForwards: userForwards,
+    userReceivements: userReceivements,
+  })
+}
+
 module.exports = {
   getRecordByID,
   getAllRecords,
@@ -705,4 +743,5 @@ module.exports = {
   reopenRecord,
   findRecordWithSeiNumber,
   confirmReceivement,
+  getUserInfo,
 };

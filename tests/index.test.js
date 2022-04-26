@@ -732,6 +732,17 @@ it('POST /confirm-receivement - should return 400 if user does not exist', async
 
   expect(response.statusCode).toEqual(400)
 })
+
+it('GET /get-user-info - should return 200 if valid email is provided', async () => {
+  const res = await request(app).get('/get-user-info?email=william@pcgo.com')
+  expect(res.statusCode).toEqual(200)
+})
+
+it('GET /get-user-info - should return 404 if invalid email is provided', async () => {
+  const res = await request(app).get('/get-user-info?invalidEmail')
+  expect(res.statusCode).toEqual(404)
+})
+
 afterAll((done) => {
   done()
 })
