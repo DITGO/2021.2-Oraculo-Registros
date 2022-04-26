@@ -12,10 +12,11 @@ const {
 const {
   formatRecordSequence,
   getNextRecordNumber,
-} = require("./RecordNumberController");
-const { Op } = require("sequelize");
-const { Department } = require("../Model/Department");
-const Receivement = require("../Model/Receivement");
+} = require('./RecordNumberController')
+const { Op, DATE } = require('sequelize')
+const { Department } = require('../Model/Department')
+const Receivement = require('../Model/Receivement')
+const moment = require('moment')
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params;
@@ -90,11 +91,9 @@ async function createRecord(req, res) {
   } = req.body);
   if (record.link) {
     if (!record.link.match(/https:\/\/\w+/g)) {
-      return res
-        .status(400)
-        .json({
-          error: "Certifique-se de que o link leva para uma URL válida",
-        });
+      return res.status(400).json({
+        error: 'Certifique-se de que o link leva para uma URL válida',
+      })
     }
   }
 
@@ -154,10 +153,23 @@ async function createRecord(req, res) {
 }
 
 async function getRecordsByPage(req, res) {
-  const { page } = req.params;
-  const { where, department_id } = req.body;
-  const itemsPerPage = 30;
+  const { page } = req.params
+  const { where, department_id } = req.body
+  const { start, end } = req.query
+  const itemsPerPage = 30
 
+  startDate =
+    start != 'undefined'
+      ? moment(start, 'DD/MM/YYYY').startOf('day')
+      : moment().endOf('day').subtract('500', 'year')
+
+  endDate =
+    end != 'undefined'
+      ? moment(end, 'DD/MM/YYYY').endOf('day')
+      : moment().endOf('day')
+
+  const startDateFormat = DATE(startDate)
+  const endDateFormat = DATE(endDate)
   try {
     const historyFields = [
       "origin_name",
@@ -178,9 +190,11 @@ async function getRecordsByPage(req, res) {
     Object.entries(_where).forEach(([key, value]) => {
       filters[key] = {
         [Op.iLike]: `%${value}%`,
-      };
-    });
-
+      }
+    })
+    filters['inclusion_date'] = {
+      [Op.between]: [startDateFormat.options, endDateFormat.options],
+    }
     if (history) {
       historyFields.forEach((item) => {
         historyFilters.push({
@@ -200,7 +214,6 @@ async function getRecordsByPage(req, res) {
         });
       });
     }
-
     const { rows, count } = await Record.findAndCountAll({
       include: [
         {
@@ -239,12 +252,13 @@ async function getRecordsByPage(req, res) {
 }
 
 async function forwardRecord(req, res) {
-  const { id } = req.params;
-  const { destination_id, origin_id, forwarded_by } = req.body;
-  const recordID = Number.parseInt(id);
-  const originID = Number.parseInt(origin_id);
-  const destinationID = Number.parseInt(destination_id);
-  const forwardedBy = String(forwarded_by);
+  const { id } = req.params
+  const { destination_id, origin_id, forwarded_by, reason } = req.body
+  const recordID = Number.parseInt(id)
+  const originID = Number.parseInt(origin_id)
+  const destinationID = Number.parseInt(destination_id)
+  const forwardedBy = String(forwarded_by)
+  const reasonHistory = String(reason)
 
   if (!Number.isFinite(originID) || !Number.isFinite(destinationID)) {
     return res.status(400).json({ error: "invalid Department id provided" });
@@ -278,7 +292,8 @@ async function forwardRecord(req, res) {
     destination_id: destinationID,
     destination_name: destinationDepartment.name,
     record_id: recordID,
-  };
+    reason: reasonHistory,
+  }
   await Receivement.create({
     record_id: recordID,
     department_id: destinationID,
