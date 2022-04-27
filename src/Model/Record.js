@@ -12,6 +12,7 @@ class Record extends Model {
         document_type: { type: DataTypes.TEXT },
         document_number: { type: DataTypes.TEXT },
         document_date: { type: DataTypes.TEXT },
+        deadline: { type: DataTypes.TEXT },
         description: { type: DataTypes.TEXT },
         sei_number: { type: DataTypes.TEXT },
         receipt_form: { type: DataTypes.TEXT },

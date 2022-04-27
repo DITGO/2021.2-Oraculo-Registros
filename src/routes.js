@@ -3,6 +3,7 @@ const RecordController = require('./Controller/RecordController')
 const UserController = require('./Controller/UserController')
 const TagController = require('./Controller/TagController')
 const DepartmentController = require('./Controller/DepartmentController')
+const Record = require('./Model/Record')
 
 const routes = express.Router()
 
@@ -35,5 +36,6 @@ routes.post('/users', UserController.createUser)
 routes.post('/user/by-mail/', UserController.getUserByMail)
 routes.post('/departments', DepartmentController.createDepartment)
 routes.post('/confirm-receivement', RecordController.confirmReceivement)
+routes.get('/get-user-info', RecordController.getUserInfo)
 
 module.exports = routes
