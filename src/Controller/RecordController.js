@@ -12,11 +12,11 @@ const {
 const {
   formatRecordSequence,
   getNextRecordNumber,
-} = require('./RecordNumberController')
-const { Op, DATE } = require('sequelize')
-const { Department } = require('../Model/Department')
-const Receivement = require('../Model/Receivement')
-const moment = require('moment')
+} = require("./RecordNumberController");
+const { Op, DATE } = require("sequelize");
+const { Department } = require("../Model/Department");
+const Receivement = require("../Model/Receivement");
+const moment = require("moment");
 
 async function findCurrentDepartment(req, res) {
   const { id } = req.params;
@@ -92,8 +92,8 @@ async function createRecord(req, res) {
   if (record.link) {
     if (!record.link.match(/https:\/\/\w+/g)) {
       return res.status(400).json({
-        error: 'Certifique-se de que o link leva para uma URL válida',
-      })
+        error: "Certifique-se de que o link leva para uma URL válida",
+      });
     }
   }
 
@@ -153,23 +153,23 @@ async function createRecord(req, res) {
 }
 
 async function getRecordsByPage(req, res) {
-  const { page } = req.params
-  const { where, department_id } = req.body
-  const { start, end } = req.query
-  const itemsPerPage = 30
+  const { page } = req.params;
+  const { where, department_id } = req.body;
+  const { start, end } = req.query;
+  const itemsPerPage = 30;
 
   startDate =
-    start != 'undefined'
-      ? moment(start, 'DD/MM/YYYY').startOf('day')
-      : moment().endOf('day').subtract('500', 'year')
+    start != "undefined"
+      ? moment(start, "DD/MM/YYYY").startOf("day")
+      : moment().endOf("day").subtract("500", "year");
 
   endDate =
-    end != 'undefined'
-      ? moment(end, 'DD/MM/YYYY').endOf('day')
-      : moment().endOf('day')
+    end != "undefined"
+      ? moment(end, "DD/MM/YYYY").endOf("day")
+      : moment().endOf("day");
 
-  const startDateFormat = DATE(startDate)
-  const endDateFormat = DATE(endDate)
+  const startDateFormat = DATE(startDate);
+  const endDateFormat = DATE(endDate);
   try {
     const historyFields = [
       "origin_name",
@@ -190,11 +190,11 @@ async function getRecordsByPage(req, res) {
     Object.entries(_where).forEach(([key, value]) => {
       filters[key] = {
         [Op.iLike]: `%${value}%`,
-      }
-    })
-    filters['inclusion_date'] = {
+      };
+    });
+    filters["inclusion_date"] = {
       [Op.between]: [startDateFormat.options, endDateFormat.options],
-    }
+    };
     if (history) {
       historyFields.forEach((item) => {
         historyFilters.push({
@@ -252,13 +252,13 @@ async function getRecordsByPage(req, res) {
 }
 
 async function forwardRecord(req, res) {
-  const { id } = req.params
-  const { destination_id, origin_id, forwarded_by, reason } = req.body
-  const recordID = Number.parseInt(id)
-  const originID = Number.parseInt(origin_id)
-  const destinationID = Number.parseInt(destination_id)
-  const forwardedBy = String(forwarded_by)
-  const reasonHistory = String(reason)
+  const { id } = req.params;
+  const { destination_id, origin_id, forwarded_by, reason } = req.body;
+  const recordID = Number.parseInt(id);
+  const originID = Number.parseInt(origin_id);
+  const destinationID = Number.parseInt(destination_id);
+  const forwardedBy = String(forwarded_by);
+  const reasonHistory = String(reason);
 
   if (!Number.isFinite(originID) || !Number.isFinite(destinationID)) {
     return res.status(400).json({ error: "invalid Department id provided" });
@@ -293,7 +293,7 @@ async function forwardRecord(req, res) {
     destination_name: destinationDepartment.name,
     record_id: recordID,
     reason: reasonHistory,
-  }
+  };
   await Receivement.create({
     record_id: recordID,
     department_id: destinationID,
@@ -686,41 +686,41 @@ async function confirmReceivement(req, res) {
 }
 
 async function getUserInfo(req, res) {
-  const { email } = req.query
-  const userEmail = String(email)
+  const { email } = req.query;
+  const userEmail = String(email);
 
   const user =
-    userEmail != 'admin@email.com'
+    userEmail != "admin@email.com"
       ? await User.findOne({ where: { email: userEmail } })
-      : 'adminUser'
+      : "adminUser";
 
   if (!user) {
-    return res.status(404).json({ error: 'There is no user for this id' })
+    return res.status(404).json({ error: "There is no user for this id" });
   }
   const userDepartment =
-    userEmail != 'admin@email.com'
+    userEmail != "admin@email.com"
       ? await Department.findByPk(user.department_id)
-      : { name: 'Administração' }
+      : { name: "Administração" };
 
   const userForwards =
-    userEmail != 'admin@email.com'
+    userEmail != "admin@email.com"
       ? await History.count({
-          where: { created_by: user.email },
+          where: { forwarded_by: user.email },
         })
-      : 0
+      : 0;
 
   const userReceivements =
-    userEmail != 'admin@email.com'
+    userEmail != "admin@email.com"
       ? await History.count({
           where: { received_by: user.email },
         })
-      : 0
+      : 0;
   return res.status(200).json({
     user,
     userDepartment,
     userForwards: userForwards,
     userReceivements: userReceivements,
-  })
+  });
 }
 
 module.exports = {
